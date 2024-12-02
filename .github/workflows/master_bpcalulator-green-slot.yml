@@ -26,7 +26,7 @@ jobs:
 
         
       - name: Run unit tests
-        run: dotnet test BPCalulatorUnitTests/BPCalculatorUnitTests.csproj --no-restore
+        run: dotnet test ./BPCalculator/BPCaluatorUnitTests/BPCaluatorUnitTests.csproj --no-restore
   
 
       - name: dotnet publish
