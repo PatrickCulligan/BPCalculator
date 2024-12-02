@@ -25,7 +25,7 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: Run unit tests
-        run: dotnet test BPCalculatorUntiTests.csproj --collect "Code coverage" 
+        run: dotnet test BPCalculatorUnitTests/BPCalculatorUntiTests.csproj  
   
 
       - name: dotnet publish
