@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 /BPCalculator/Properties/launchSettings.json
+/BPCalculator/appsettings.Development.json
