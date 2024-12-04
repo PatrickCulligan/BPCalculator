@@ -35,7 +35,6 @@ namespace NUit
 
         // URI for web app being tested
         private String webAppUri;
-
         // .runsettings property overriden in vsts test runner 
         // release task to point to run settings file
         // also webAppUri overriden to use pipeline variable
