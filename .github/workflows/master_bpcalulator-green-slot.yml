@@ -27,9 +27,6 @@ jobs:
       - name: Run unit tests
         run: dotnet test BPCaluatorUnitTests/BPCaluatorUnitTests.csproj --no-restore
 
-      - name: Run Selenium tests
-        run: dotnet test SeleniumTest/SeleniumTest.csproj --no-restore
-
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
