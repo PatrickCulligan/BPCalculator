@@ -22,7 +22,7 @@ namespace BPCalculatorTests
             var category = bp.Category;
 
             // Assert
-            Assert.AreEqual(BPCategory.Low, category);
+            Assert.That(category, Is.EqualTo(BPCategory.Low));
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace BPCalculatorTests
             var category = bp.Category;
 
             // Assert
-            Assert.AreEqual(BPCategory.Ideal, category);
+            Assert.That(category, Is.EqualTo(BPCategory.Ideal));
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace BPCalculatorTests
             var category = bp.Category;
 
             // Assert
-            Assert.AreEqual(BPCategory.PreHigh, category);
+            Assert.That(category, Is.EqualTo(BPCategory.PreHigh));
         }
 
         [Test]
@@ -73,12 +73,10 @@ namespace BPCalculatorTests
             var category = bp.Category;
 
             // Assert
-            Assert.AreEqual(BPCategory.High, category);
+            Assert.That(category, Is.EqualTo(BPCategory.High));
         }
 
-      
-
-    [Test]
+        [Test]
         public void BloodPressure_ShouldNotThrowException_WhenValuesAreWithinRange()
         {
             // Arrange
@@ -95,8 +93,6 @@ namespace BPCalculatorTests
             });
         }
 
-       
-
         [Test]
         public void BloodPressure_ShouldReturnCorrectCategory_WhenDiastolicIsAtMaxBoundary()
         {
@@ -111,7 +107,7 @@ namespace BPCalculatorTests
             var category = bp.Category;
 
             // Assert
-            Assert.AreEqual(BPCategory.High, category);
+            Assert.That(category, Is.EqualTo(BPCategory.High));
         }
 
         [Test]
@@ -128,10 +124,8 @@ namespace BPCalculatorTests
             var category = bp.Category;
 
             // Assert
-            Assert.AreEqual(BPCategory.PreHigh, category);
+            Assert.That(category, Is.EqualTo(BPCategory.PreHigh));
         }
-
-        
 
         [Test]
         public void BloodPressure_ShouldReturnIdealCategory_WhenValuesAreAtBoundaryOfIdealRange()
@@ -147,7 +141,7 @@ namespace BPCalculatorTests
             var category = bp.Category;
 
             // Assert
-            Assert.AreEqual(BPCategory.Ideal, category);
+            Assert.That(category, Is.EqualTo(BPCategory.Ideal));
         }
 
         [Test]
@@ -164,7 +158,7 @@ namespace BPCalculatorTests
             var category = bp.Category;
 
             // Assert
-            Assert.AreEqual(BPCategory.High, category);
+            Assert.That(category, Is.EqualTo(BPCategory.High));
         }
 
         [Test]
@@ -181,10 +175,7 @@ namespace BPCalculatorTests
             var category = bp.Category;
 
             // Assert
-            Assert.AreEqual(BPCategory.Low, category);
+            Assert.That(category, Is.EqualTo(BPCategory.Low));
         }
-
-
     }
 }
-
