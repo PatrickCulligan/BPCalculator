@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35506.116 d17.12
+VisualStudioVersion = 17.12.35506.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BPCalculator", "BPCalculator\BPCalculator.csproj", "{5966DA6C-819D-4303-ADC7-425B8541EC84}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BPCaluatorUnitTests", "BPCaluatorUnitTests\BPCaluatorUnitTests.csproj", "{38272463-172B-4BDB-9D8E-40CF379F685D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeleniumTests", "SeleniumTests\SeleniumTests.csproj", "{A75869BB-6495-4595-9D2C-61F6A83B0B84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{38272463-172B-4BDB-9D8E-40CF379F685D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38272463-172B-4BDB-9D8E-40CF379F685D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38272463-172B-4BDB-9D8E-40CF379F685D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A75869BB-6495-4595-9D2C-61F6A83B0B84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A75869BB-6495-4595-9D2C-61F6A83B0B84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A75869BB-6495-4595-9D2C-61F6A83B0B84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A75869BB-6495-4595-9D2C-61F6A83B0B84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

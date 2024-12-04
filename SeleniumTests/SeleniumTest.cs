@@ -15,7 +15,7 @@ using System;
 // or use the dotnet vstest task
 // e.g. dotnet vstest seleniumtest\bin\debug\netcoreapp2.1\seleniumtest.dll /Settings:seleniumtest.runsettings
 
-namespace SeleniumTest
+namespace NUit
 {
     [TestClass]
     public class SeleniumTest
@@ -53,7 +53,7 @@ namespace SeleniumTest
         public void TestBloodPressureCalculatorUI()
         {
             ChromeOptions options = new ChromeOptions();
-           
+
 
             for (int i = 0; i < 3; i++)
             {
