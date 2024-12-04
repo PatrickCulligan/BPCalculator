@@ -55,8 +55,7 @@ namespace NUit
             ChromeOptions options = new ChromeOptions();
 
 
-            for (int i = 0; i < 3; i++)
-            {
+           
                 using (IWebDriver driver = new ChromeDriver(options))
                 {
                     try
@@ -97,4 +96,4 @@ namespace NUit
             }
         }
     }
-}
+
