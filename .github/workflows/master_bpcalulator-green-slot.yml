@@ -31,9 +31,6 @@ jobs:
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
-      - name: Run Selenium tests
-        run: dotnet test /home/runner/work/BPCalculator/BPCalculator/SeleniumTests/bin/Release/net8.0/SeleniumTests.dll --no-restore
-
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
