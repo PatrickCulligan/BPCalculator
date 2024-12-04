@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - BPCalulator-Green-Slot
+name: Build, test, and deploy ASP.Net Core app to Azure Web App - BPCalulator-Green-Slot
 
 on:
   push:
@@ -24,10 +24,11 @@ jobs:
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
-        
       - name: Run unit tests
         run: dotnet test BPCaluatorUnitTests/BPCaluatorUnitTests.csproj --no-restore
-  
+
+      - name: Run Selenium tests
+        run: dotnet test SeleniumTest/SeleniumTest.csproj --no-restore
 
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
@@ -67,4 +68,3 @@ jobs:
           app-name: 'BPCalulator-Green-Slot'
           slot-name: 'Production'
           package: .
-          
