@@ -26,14 +26,20 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: Run unit tests
-        run: dotnet test BPCaluatorUnitTests/BPCaluatorUnitTests.csproj --no-restore
+        run: dotnet test BPCaluatorUnitTests/BPCaluatorUnitTests.csproj --collect "Code coverage" 
 
 
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Run Selenium tests
-        run: dotnet test /home/runner/work/BPCalculator/BPCalculator/SeleniumTests/bin/Release/net8.0/SeleniumTests.dll --no-restore
+        run: dotnet test /home/runner/work/BPCalculator/BPCalculator/SeleniumTests/bin/Release/net8.0/SeleniumTests.dll --logger:"trx;LogFileName=selenium.trx"
+
+          # Upload results of selenium tests
+      - uses: actions/upload-artifact@v4
+        with:
+         name: Selenium Tests Results
+         path: TestResults/selenium.trx
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
