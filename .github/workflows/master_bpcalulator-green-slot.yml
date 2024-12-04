@@ -16,6 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
@@ -25,12 +26,16 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: Run unit tests
-        run: dotnet test BPCaluatorUnitTests/BPCaluatorUnitTests.csproj --collect "Code coverage"
+        run: dotnet test BPCaluatorUnitTests/BPCaluatorUnitTests.csproj --collect "Code coverage" 
+
+
+      - name: dotnet publish
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Set up ChromeDriver
-        uses: actions/selenium-chromedriver@v2
-        with:
-          version: latest
+        run: |
+          wget -N https://chromedriver.storage.googleapis.com/$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip -d /usr/local/bin/
 
       - name: Install Chrome
         run: |
