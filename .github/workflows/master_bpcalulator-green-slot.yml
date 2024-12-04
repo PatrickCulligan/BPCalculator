@@ -16,7 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
@@ -26,32 +25,14 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: Run unit tests
-        run: dotnet test BPCaluatorUnitTests/BPCaluatorUnitTests.csproj --collect "Code coverage" 
+        run: dotnet test BPCaluatorUnitTests/BPCaluatorUnitTests.csproj --no-restore
 
 
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
-        - name: Run Selenium tests
-        run: |
-          xvfb-run -a dotnet test /home/runner/work/BPCalculator/BPCalculator/SeleniumTests/bin/Release/net8.0/SeleniumTests.dll --logger:"trx;LogFileName=selenium.trx"
-        env:
-          DOTNET_CLI_TELEMETRY_OPTOUT: 1
-          DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-          CHROMEWEBDRIVER: /usr/local/bin/chromedriver
-          PATH: /usr/local/bin:$PATH        env:
-          DOTNET_CLI_TELEMETRY_OPTOUT: 1
-          DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-          CHROMEWEBDRIVER: /usr/local/bin/chromedriver
-          PATH: /usr/local/bin:$PATH
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Selenium Tests Results
-          path: TestResults/selenium.trx
-
-      - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      - name: Run Selenium tests
+        run: dotnet test /home/runner/work/BPCalculator/BPCalculator/SeleniumTests/bin/Release/net8.0/SeleniumTests.dll --no-restore
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -67,6 +48,8 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       id-token: write #This is required for requesting the JWT
+
+
 
     steps:
       - name: Download artifact from build job
