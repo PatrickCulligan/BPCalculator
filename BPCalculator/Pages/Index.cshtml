@@ -22,12 +22,13 @@
                 <span asp-validation-for="BP.Diastolic" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Submit" class="btn btn-default" />
+                <input type="submit" value="Submit" class="btn btn-primary" />
             </div>
             @if (ViewData.ModelState.IsValid)
             {
                 <div class="form-group">
                     <p>Category: @Html.DisplayFor(model => model.BP.Category)</p>
+
                 </div>
             }
         </form>
@@ -59,7 +60,7 @@
                     data: {
                         labels: ['Systolic', 'Diastolic'],
                         datasets: [{
-                            label: 'Blood Pressure Readings',
+                            label:  'Blood Pressure Readings',
                             data: [@Model.BP.Systolic, @Model.BP.Diastolic],
                             backgroundColor: [
                                 'rgba(54, 162, 235, 0.2)',
