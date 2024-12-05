@@ -19,22 +19,15 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      # Step 3: Install Google Chrome
-      - name: Install Google Chrome
+      # Step 3: Install Chromium and ChromeDriver
+      - name: Install Chromium and ChromeDriver
         run: |
           sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+          sudo apt-get install -y chromium-browser chromium-chromedriver
 
-      # Step 4: Install ChromeDriver matching installed Chrome version
-      - name: Install Compatible ChromeDriver
-        run: |
-          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+\.\d+')
-          CHROMEDRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION" || echo "latest")
-          wget -N "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
-          unzip chromedriver_linux64.zip -d $HOME/chromedriver
-          sudo mv -f $HOME/chromedriver/chromedriver /usr/local/bin/chromedriver
-          sudo chmod +x /usr/local/bin/chromedriver
-          export PATH=$PATH:/usr/local/bin/chromedriver
+      # Step 4: Add ChromeDriver to PATH
+      - name: Add ChromeDriver to PATH
+        run: echo "$PATH:/usr/lib/chromium-browser/" >> $GITHUB_ENV
 
       # Step 5: Restore dependencies for Selenium test project
       - name: Restore dependencies
