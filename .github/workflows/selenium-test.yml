@@ -49,6 +49,7 @@ jobs:
           name: Selenium-Test-Results
           path: SeleniumTests/TestResults/selenium.trx
 
+
       # Step 9: Add test reporting
       - name: Publish Test Results
         uses: actions/upload-artifact@v4
