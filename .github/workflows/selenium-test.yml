@@ -25,10 +25,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
 
-      # Step 4: Set up ChromeDriver
-      - name: Set up ChromeDriver
+      # Step 4: Install ChromeDriver matching installed Chrome version
+      - name: Install Compatible ChromeDriver
         run: |
-          wget -N https://chromedriver.storage.googleapis.com/$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
+          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+\.\d+')
+          CHROMEDRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION" || echo "latest")
+          wget -N "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
           unzip chromedriver_linux64.zip -d $HOME/chromedriver
           sudo mv -f $HOME/chromedriver/chromedriver /usr/local/bin/chromedriver
           sudo chmod +x /usr/local/bin/chromedriver
@@ -42,7 +44,7 @@ jobs:
       - name: Build Selenium Test Project
         run: dotnet build ./SeleniumTests/SeleniumTests.csproj --configuration Release
 
-      # Step 7: Run Selenium tests with settings file and logger (ensure AppTest.runsettings is used)
+      # Step 7: Run Selenium tests with settings file and logger
       - name: Run Selenium Tests
         env:
           DOTNET_CLI_TELEMETRY_OPTOUT: 1
