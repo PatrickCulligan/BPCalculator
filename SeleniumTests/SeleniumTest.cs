@@ -52,6 +52,7 @@ namespace NUit
         public void TestBloodPressureCalculatorUI()
         {
             // Configure Chrome to run headless for CI/CD environments
+
             ChromeOptions options = new ChromeOptions();
             options.AddArgument("--headless");
             options.AddArgument("--no-sandbox");
