@@ -19,9 +19,11 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      # Step 3: Install Chrome
+      # Step 3: Install Google Chrome
       - name: Install Chrome
         run: |
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
 
@@ -29,6 +31,7 @@ jobs:
       - name: Install ChromeDriver
         run: |
           sudo apt-get install -y chromium-chromedriver
+          sudo ln -s /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
 
       # Step 5: Restore dependencies for Selenium test project
       - name: Restore dependencies
@@ -38,9 +41,11 @@ jobs:
       - name: Build Selenium Test Project
         run: dotnet build ./SeleniumTests/SeleniumTests.csproj --configuration Release
 
-      # Step 7: Run Selenium tests
+      # Step 7: Run Selenium tests with the runsettings file
       - name: Run Selenium Tests
-        run: dotnet test ./SeleniumTests/bin/Release/net8.0/SeleniumTests.dll --settings AppTest.runsettings --logger:"trx;LogFileName=selenium.trx"
+        env:
+          CI: true
+        run: dotnet test ./SeleniumTests/SeleniumTests.csproj --settings ./AppTest.runsettings --logger:"trx;LogFileName=selenium.trx"
 
       # Step 8: Upload Selenium test results as an artifact
       - name: Upload Selenium Test Results
