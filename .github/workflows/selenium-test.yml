@@ -19,48 +19,36 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      # Step 3: Install Google Chrome
-      - name: Install Google Chrome
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+      # Step 3: Set up Chromium and ChromeDriver
+      - name: Set up Chromium and ChromeDriver
+        uses: actions/setup-chromedriver@v4
+        with:
+          chromium-version: latest
 
-      # Step 4: Install ChromeDriver with fallback mechanism
-      - name: Install ChromeDriver
-        run: |
-          set -e
-          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+\.\d+' | head -1)
-          MAJOR_VERSION=$(echo $CHROME_VERSION | cut -d. -f1)
-          DRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$MAJOR_VERSION" || echo "LATEST")
-          wget -N "https://chromedriver.storage.googleapis.com/${DRIVER_VERSION}/chromedriver_linux64.zip" -P ~/
-          unzip ~/chromedriver_linux64.zip -d ~/
-          sudo mv -f ~/chromedriver /usr/local/bin/chromedriver
-          sudo chmod +x /usr/local/bin/chromedriver
-
-      # Step 5: Add Chrome and ChromeDriver to PATH
-      - name: Add Chrome and ChromeDriver to PATH
-        run: |
-          echo "/usr/bin/google-chrome" >> $GITHUB_PATH
-          echo "/usr/local/bin/chromedriver" >> $GITHUB_PATH
-
-      # Step 6: Restore dependencies for Selenium test project
+      # Step 4: Restore dependencies for Selenium test project
       - name: Restore dependencies
         run: dotnet restore ./SeleniumTests/SeleniumTests.csproj
 
-      # Step 7: Build the Selenium test project
+      # Step 5: Build the Selenium test project
       - name: Build Selenium Test Project
         run: dotnet build ./SeleniumTests/SeleniumTests.csproj --configuration Release
 
-      # Step 8: Run Selenium tests with settings file and logger
+      # Step 6: Run Selenium tests with settings file and logger
       - name: Run Selenium Tests
         env:
           DOTNET_CLI_TELEMETRY_OPTOUT: 1
           DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
         run: dotnet test ./SeleniumTests/bin/Release/net8.0/SeleniumTests.dll --settings AppTest.runsettings --logger:"trx;LogFileName=selenium.trx"
 
-      # Step 9: Upload Selenium test results as an artifact
+      # Step 7: Upload Selenium test results as an artifact
       - name: Upload Selenium Test Results
         uses: actions/upload-artifact@v4
         with:
           name: Selenium-Test-Results
           path: ./SeleniumTests/TestResults/selenium.trx
+
+      # Step 8: Cleanup step
+      - name: Cleanup workspace
+        if: always()
+        run: |
+          rm -rf ./SeleniumTests/TestResults
