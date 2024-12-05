@@ -9,56 +9,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the repository code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Set up .NET Core environment
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
 
-      # Step 3: Install Google Chrome
       - name: Install Google Chrome
         run: |
           wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
           sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
+          sudo ln -s /usr/bin/google-chrome /usr/bin/chromium-browser || true
 
-      # Step 4: Install ChromeDriver
       - name: Install ChromeDriver
         run: |
-          CHROME_VERSION=$(google-chrome --version | grep -oP '[0-9]+\.[0-9]+\.[0-9]+')
-          DRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
-          wget -N "https://chromedriver.storage.googleapis.com/$DRIVER_VERSION/chromedriver_linux64.zip"
+          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+' | head -1)
+          CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION%%.*}")
+          wget -N "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
           unzip chromedriver_linux64.zip
           sudo mv chromedriver /usr/local/bin/
           sudo chmod +x /usr/local/bin/chromedriver
 
-      # Step 5: Verify Chrome and ChromeDriver versions
       - name: Verify Setup
         run: |
           google-chrome --version
           chromedriver --version
 
-      # Step 6: Restore dependencies for Selenium test project
       - name: Restore dependencies
         run: dotnet restore ./SeleniumTests/SeleniumTests.csproj
 
-      # Step 7: Build the Selenium test project
       - name: Build Selenium Test Project
         run: dotnet build ./SeleniumTests/SeleniumTests.csproj --configuration Release
 
-      # Step 8: Run Selenium tests
       - name: Run Selenium Tests
         env:
           DOTNET_CLI_TELEMETRY_OPTOUT: 1
           DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
         run: dotnet test ./SeleniumTests/bin/Release/net8.0/SeleniumTests.dll --settings AppTest.runsettings --logger:"trx;LogFileName=selenium.trx"
 
-      # Step 9: Upload Selenium test results as an artifact
       - name: Upload Selenium Test Results
         uses: actions/upload-artifact@v4
         with:
