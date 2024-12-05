@@ -51,48 +51,51 @@ namespace NUit
         [TestMethod]
         public void TestBloodPressureCalculatorUI()
         {
+            // Configure Chrome to run headless for CI/CD environments
             ChromeOptions options = new ChromeOptions();
+            options.AddArgument("--headless");
+            options.AddArgument("--no-sandbox");
+            options.AddArgument("--disable-gpu");
+            options.AddArgument("--disable-dev-shm-usage");
+            options.AddArgument("--remote-debugging-port=9222");
 
-
-           
-                using (IWebDriver driver = new ChromeDriver(options))
+            using (IWebDriver driver = new ChromeDriver(options))
+            {
+                try
                 {
-                    try
-                    {
-                        // Navigate to URI for blood pressure calculator
-                        driver.Navigate().GoToUrl(webAppUri);
+                    // Navigate to URI for blood pressure calculator
+                    driver.Navigate().GoToUrl(webAppUri);
 
-                        // Locate the input fields for Systolic and Diastolic values
-                        IWebElement systolicInput = driver.FindElement(By.Name("BP.Systolic"));
-                        IWebElement diastolicInput = driver.FindElement(By.Name("BP.Diastolic"));
+                    // Locate the input fields for Systolic and Diastolic values
+                    IWebElement systolicInput = driver.FindElement(By.Name("BP.Systolic"));
+                    IWebElement diastolicInput = driver.FindElement(By.Name("BP.Diastolic"));
 
-                        // Input values into Systolic and Diastolic fields
-                        systolicInput.Clear();
-                        systolicInput.SendKeys("120");
-                        diastolicInput.Clear();
-                        diastolicInput.SendKeys("80");
+                    // Input values into Systolic and Diastolic fields
+                    systolicInput.Clear();
+                    systolicInput.SendKeys("120");
+                    diastolicInput.Clear();
+                    diastolicInput.SendKeys("80");
 
-                        // Submit the form
-                        driver.FindElement(By.CssSelector("input[type='submit']")).Click();
+                    // Submit the form
+                    driver.FindElement(By.CssSelector("input[type='submit']")).Click();
 
-                        // Explicitly wait for result with "Category" item
-                        IWebElement categoryElement = new WebDriverWait(driver, TimeSpan.FromSeconds(10))
-                            .Until(c => c.FindElement(By.XPath("//p[contains(text(), 'Category:')]")));
+                    // Explicitly wait for result with "Category" item
+                    IWebElement categoryElement = new WebDriverWait(driver, TimeSpan.FromSeconds(10))
+                        .Until(c => c.FindElement(By.XPath("//p[contains(text(), 'Category:')]")));
 
-                        // Get the result and verify
-                        String category = categoryElement.Text;
-                        StringAssert.Contains(category, "Ideal");
-                    }
-                    catch (WebDriverException e)
-                    {
-                        Assert.Fail("WebDriverException occurred: " + e.Message);
-                    }
-                    finally
-                    {
-                        driver.Quit();
-                    }
+                    // Get the result and verify
+                    string category = categoryElement.Text;
+                    StringAssert.Contains(category, "Ideal");
+                }
+                catch (WebDriverException e)
+                {
+                    Assert.Fail("WebDriverException occurred: " + e.Message);
+                }
+                finally
+                {
+                    driver.Quit();
                 }
             }
         }
     }
-
+}

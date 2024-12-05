@@ -1,6 +1,5 @@
 name: Run Selenium Tests Manually
 
-# Trigger manually from GitHub Actions UI
 on:
   workflow_dispatch:
 
@@ -13,8 +12,6 @@ jobs:
       # Step 1: Check out the repository code
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Ensure full checkout for tests
 
       # Step 2: Set up .NET Core environment
       - name: Set up .NET Core
@@ -22,19 +19,30 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      # Step 3: Restore dependencies for Selenium test project
+      # Step 3: Install Chrome
+      - name: Install Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      # Step 4: Install ChromeDriver
+      - name: Install ChromeDriver
+        run: |
+          sudo apt-get install -y chromium-chromedriver
+
+      # Step 5: Restore dependencies for Selenium test project
       - name: Restore dependencies
         run: dotnet restore ./SeleniumTests/SeleniumTests.csproj
 
-      # Step 4: Build the Selenium test project
+      # Step 6: Build the Selenium test project
       - name: Build Selenium Test Project
         run: dotnet build ./SeleniumTests/SeleniumTests.csproj --configuration Release
 
-      # Step 5: Run Selenium tests with the provided run settings file
+      # Step 7: Run Selenium tests
       - name: Run Selenium Tests
-        run: dotnet test ./SeleniumTests/bin/Release/net8.0/SeleniumTests.dll --settings SeleniumTest.runsettings --logger:"trx;LogFileName=selenium.trx"
+        run: dotnet test ./SeleniumTests/bin/Release/net8.0/SeleniumTests.dll --logger:"trx;LogFileName=selenium.trx"
 
-      # Step 6: Upload Selenium test results as an artifact
+      # Step 8: Upload Selenium test results as an artifact
       - name: Upload Selenium Test Results
         uses: actions/upload-artifact@v4
         with:
