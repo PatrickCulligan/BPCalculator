@@ -27,7 +27,7 @@ jobs:
 
       # Step 4: Add ChromeDriver to PATH
       - name: Add ChromeDriver to PATH
-        run: echo "$PATH:/usr/lib/chromium-browser/" >> $GITHUB_ENV
+        run: echo "PATH=$PATH:/usr/lib/chromium-browser" >> $GITHUB_ENV
 
       # Step 5: Restore dependencies for Selenium test project
       - name: Restore dependencies
