@@ -59,6 +59,7 @@ namespace NUit
             options.AddArgument("--disable-gpu");
             options.AddArgument("--disable-dev-shm-usage");
             options.AddArgument("--remote-debugging-port=9222");
+           // options.BinaryLocation = "/usr/bin/google-chrome";  // Explicitly set Chrome binary location
 
             using (IWebDriver driver = new ChromeDriver(options))
             {
