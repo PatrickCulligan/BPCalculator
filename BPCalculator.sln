@@ -10,9 +10,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeleniumTests", "SeleniumTests\SeleniumTests.csproj", "{A75869BB-6495-4595-9D2C-61F6A83B0B84}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{967B12C1-326E-4CF5-B1D3-B85499B7E426}"
-	ProjectSection(SolutionItems) = preProject
-		AppTest.runsettings = AppTest.runsettings
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
