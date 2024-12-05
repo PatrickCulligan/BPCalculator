@@ -32,7 +32,7 @@ jobs:
 
       # Step 5: Run Selenium tests with the provided run settings file
       - name: Run Selenium Tests
-        run: dotnet test ./SeleniumTests/bin/Release/net8.0/SeleniumTests.dll --settings SeleniumTest.runsettings --logger:"trx;LogFileName=selenium.trx"
+        run: dotnet test ./SeleniumTests/bin/Release/net8.0/SeleniumTests.dll --settings AppTest.runsettings --logger:"trx;LogFileName=selenium.trx"
 
       # Step 6: Upload Selenium test results as an artifact
       - name: Upload Selenium Test Results
