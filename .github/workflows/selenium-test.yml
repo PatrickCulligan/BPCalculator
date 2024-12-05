@@ -22,22 +22,21 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      # Step 3: Restore dependencies
+      # Step 3: Restore dependencies for Selenium test project
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore ./SeleniumTests/SeleniumTests.csproj
 
       # Step 4: Build the Selenium test project
       - name: Build Selenium Test Project
-        run: dotnet build --configuration Release
+        run: dotnet build ./SeleniumTests/SeleniumTests.csproj --configuration Release
 
       # Step 5: Run Selenium tests with the provided run settings file
       - name: Run Selenium Tests
-        run: dotnet test /home/runner/work/BPCalculator/BPCalculator/SeleniumTests/bin/Release/net8.0/SeleniumTests.dll --settings SeleniumTest.runsettings --logger:"trx;LogFileName=selenium.trx"
+        run: dotnet test ./SeleniumTests/bin/Release/net8.0/SeleniumTests.dll --settings SeleniumTest.runsettings --logger:"trx;LogFileName=selenium.trx"
 
       # Step 6: Upload Selenium test results as an artifact
       - name: Upload Selenium Test Results
         uses: actions/upload-artifact@v4
         with:
           name: Selenium-Test-Results
-          path: SeleniumTest/TestResults/selenium.trx
-  
+          path: ./SeleniumTests/TestResults/selenium.trx
