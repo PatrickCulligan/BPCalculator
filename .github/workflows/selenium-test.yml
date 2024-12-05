@@ -34,7 +34,6 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore ./SeleniumTests/SeleniumTests.csproj
 
-
       # Step 6: Build the Selenium test project
       - name: Build Selenium Test Project
         run: dotnet build ./SeleniumTests/SeleniumTests.csproj --configuration Release
