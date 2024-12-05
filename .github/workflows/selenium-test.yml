@@ -1,7 +1,7 @@
 name: Run Selenium Tests Manually
 
 on:
-  workflow_dispatch:  # Trigger manually from GitHub Actions UI
+  workflow_dispatch:
 
 jobs:
   selenium-tests:
@@ -19,18 +19,22 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      # Step 3: Install Chrome (needed for Selenium)
+      # Step 3: Install Google Chrome
       - name: Install Google Chrome
         run: |
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
 
-      # Step 4: Install ChromeDriver
-      - name: Install ChromeDriver
+      # Step 4: Set up ChromeDriver
+      - name: Set up ChromeDriver
         run: |
-          sudo apt-get install -y chromium-chromedriver
+          wget -N https://chromedriver.storage.googleapis.com/$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip -d $HOME/chromedriver
+          sudo mv -f $HOME/chromedriver/chromedriver /usr/local/bin/chromedriver
+          sudo chmod +x /usr/local/bin/chromedriver
+          export PATH=$PATH:/usr/local/bin/chromedriver
 
-      # Step 5: Restore dependencies for the Selenium test project
+      # Step 5: Restore dependencies for Selenium test project
       - name: Restore dependencies
         run: dotnet restore ./SeleniumTests/SeleniumTests.csproj
 
@@ -38,8 +42,11 @@ jobs:
       - name: Build Selenium Test Project
         run: dotnet build ./SeleniumTests/SeleniumTests.csproj --configuration Release
 
-      # Step 7: Run Selenium tests
+      # Step 7: Run Selenium tests with settings file and logger (ensure AppTest.runsettings is used)
       - name: Run Selenium Tests
+        env:
+          DOTNET_CLI_TELEMETRY_OPTOUT: 1
+          DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
         run: dotnet test ./SeleniumTests/bin/Release/net8.0/SeleniumTests.dll --settings AppTest.runsettings --logger:"trx;LogFileName=selenium.trx"
 
       # Step 8: Upload Selenium test results as an artifact
@@ -47,12 +54,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Selenium-Test-Results
-          path: SeleniumTests/TestResults/selenium.trx
-
-
-      # Step 9: Add test reporting
-      - name: Publish Test Results
-        uses: actions/upload-artifact@v4
-        with:
-          name: TestResults
-          path: ./SeleniumTests/TestResults/
+          path: ./SeleniumTests/TestResults/selenium.trx
