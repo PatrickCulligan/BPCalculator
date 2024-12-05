@@ -25,19 +25,24 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
 
-      # Step 4: Restore dependencies for Selenium test project
+      # Step 4: Install ChromeDriver
+      - name: Install ChromeDriver
+        run: |
+          sudo apt-get install -y chromium-chromedriver
+
+      # Step 5: Restore dependencies for Selenium test project
       - name: Restore dependencies
         run: dotnet restore ./SeleniumTests/SeleniumTests.csproj
 
-      # Step 5: Build the Selenium test project
+      # Step 6: Build the Selenium test project
       - name: Build Selenium Test Project
         run: dotnet build ./SeleniumTests/SeleniumTests.csproj --configuration Release
 
-      # Step 6: Run Selenium tests
+      # Step 7: Run Selenium tests
       - name: Run Selenium Tests
-        run: dotnet test ./SeleniumTests/bin/Release/net8.0/SeleniumTests.dll --settings AppTest.runsettings --logger:"trx;LogFileName=selenium.trx"
+        run: dotnet test ./SeleniumTests/bin/Release/net8.0/SeleniumTests.dll --logger:"trx;LogFileName=selenium.trx"
 
-      # Step 7: Upload Selenium test results as an artifact
+      # Step 8: Upload Selenium test results as an artifact
       - name: Upload Selenium Test Results
         uses: actions/upload-artifact@v4
         with:
