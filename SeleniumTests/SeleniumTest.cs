@@ -43,9 +43,9 @@ namespace NUit
         public void Setup()
         {
             // read URL from SeleniumTest.runsettings (configure run settings)
-            //this.webAppUri = testContextInstance.Properties["webAppUri"].ToString();
+            this.webAppUri = testContextInstance.Properties["webAppUri"].ToString();
 
-            this.webAppUri = "https://bpcalulator-green-slot-dscydwgqh3eyfxf4.ukwest-01.azurewebsites.net/";
+            //this.webAppUri = "https://bpcalulator-green-slot-dscydwgqh3eyfxf4.ukwest-01.azurewebsites.net/";
         }
 
         [TestMethod]
