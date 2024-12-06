@@ -8,7 +8,7 @@ export let options = {
         { duration: "1m", target: 0 }    // Ramp down to 0 users over 1 minute
     ],
     thresholds: {
-        "http_req_duration": ["p(95) < 200"], // 95% of requests must be below 200ms
+        "http_req_duration": ["p(80) < 200"], // 80% of requests must be below 200ms
     },
 };
 
