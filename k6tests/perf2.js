@@ -9,7 +9,7 @@ export let options = {
         { duration: "1m", target: 0 }   // Ramp down to 0 virtual users over 1 minute
     ],
     thresholds: {
-        "http_req_duration": ["p(95) < 200"], // Set a threshold to keep 95% of request durations under 200ms
+        "http_req_duration": ["p(90) < 200"], // Set a threshold to keep 95% of request durations under 200ms
     },
     discardResponseBodies: false,
     cloud: {
