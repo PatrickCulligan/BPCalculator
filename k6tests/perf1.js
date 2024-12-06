@@ -16,16 +16,21 @@ export let options = {
 
     discardResponseBodies: true,
 
+    cloud: {
+        distribution: {
+            distributionLabel1: { loadZone: 'amazon:us:ashburn', percent: 50 },
+            distributionLabel2: { loadZone: 'amazon:ie:dublin', percent: 50 },
+        },
+    },
+};
 
+export default function () {
+    let res = http.get("https://bpcalulator-green-slot-dscydwgqh3eyfxf4.ukwest-01.azurewebsites.net/");
 
-    export default function() {
-        let res = http.get("https://bpcalulator-green-slot-dscydwgqh3eyfxf4.ukwest-01.azurewebsites.net/");
+    check(res, {
+        "is status 200": (r) => r.status === 200
+    });
 
-        check(res, {
-            "is status 200": (r) => r.status === 200
-        });
-
-        // "Think" for 3 seconds to simulate real user behavior
-        sleep(3);
-    }
+    // "Think" for 3 seconds to simulate real user behavior
+    sleep(3);
 }
