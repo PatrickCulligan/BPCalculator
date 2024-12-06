@@ -1,7 +1,8 @@
 import { check, sleep } from "k6";
 import http from "k6/http";
-import { appUrl } from './helper.js'; 
 //Load testing helps to determine how your application performs under expected load conditions.
+let BASEURL = "https://bpcalulator-green-slot-dscydwgqh3eyfxf4.ukwest-01.azurewebsites.net/
+// code here can use carName
 
 export let options = {
     stages: [
@@ -15,7 +16,7 @@ export let options = {
 };
 
 export default function () {
-    let res = http.get(appUrl);
+    let res = http.get(BASEURL);
     check(res, {
         "is status 200": (r) => r.status === 200,
     });
