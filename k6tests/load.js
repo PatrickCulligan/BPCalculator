@@ -1,6 +1,5 @@
 import { check, sleep } from "k6";
 import http from "k6/http";
-import { BASE_URL } from "./config.js"; // Import the global variable
 //Load testing helps to determine how your application performs under expected load conditions.
 
 
@@ -16,7 +15,7 @@ export let options = {
 };
 
 export default function () {
-    let res = http.get(`${BASE_URL}/`);
+    let res = http.get("https://bpcalulator-green-slot-dscydwgqh3eyfxf4.ukwest-01.azurewebsites.net/");
     check(res, {
         "is status 200": (r) => r.status === 200,
     });
