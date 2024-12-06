@@ -9,7 +9,8 @@ export let options = {
 
   // Either specify vus + duration or stages
   // vus: 20,
-  // duration: "3m",
+    // duration: "3m",
+
 
   // This stages configuration will ramp to 20 Virtual Users over a minute,
   // maintain those 20 concurrent users for 1 minute
