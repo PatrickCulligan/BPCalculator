@@ -1,5 +1,6 @@
 import { check, sleep } from "k6";
 import http from "k6/http";
+import { appUrl } from './helper.js'; 
 //Load testing helps to determine how your application performs under expected load conditions.
 
 export let options = {
@@ -14,7 +15,7 @@ export let options = {
 };
 
 export default function () {
-    let res = http.get("https://bpcalulator-green-slot-dscydwgqh3eyfxf4.ukwest-01.azurewebsites.net/");
+    let res = http.get(appUrl);
     check(res, {
         "is status 200": (r) => r.status === 200,
     });
