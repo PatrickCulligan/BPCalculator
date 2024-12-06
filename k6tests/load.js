@@ -1,5 +1,6 @@
 import { check, sleep } from "k6";
 import http from "k6/http";
+//Load testing helps to determine how your application performs under expected load conditions.
 
 export let options = {
     stages: [
