@@ -1,0 +1,1 @@
+export const BASE_URL = "https://bpcalulator-green-slot-dscydwgqh3eyfxf4.ukwest-01.azurewebsites.net";

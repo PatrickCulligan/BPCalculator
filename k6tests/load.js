@@ -1,5 +1,6 @@
 import { check, sleep } from "k6";
 import http from "k6/http";
+import { BASE_URL } from "./config.js"; // Import the global variable
 //Load testing helps to determine how your application performs under expected load conditions.
 
 
