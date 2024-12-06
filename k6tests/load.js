@@ -1,6 +1,6 @@
 import { check, sleep } from "k6";
 import http from "k6/http";
-import { appUrl } from './helper.js'; 
+import { appUrl } from 'helper.js'; 
 //Load testing helps to determine how your application performs under expected load conditions.
 
 export let options = {
