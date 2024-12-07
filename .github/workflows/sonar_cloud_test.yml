@@ -1,15 +1,32 @@
-
 name: SonarCloud
+
 on:
-  workflow_dispatch:                             
+  workflow_dispatch:
 
 jobs:
   scan_code:
     runs-on: ubuntu-latest
     steps:
+      # Step 1: Check out the repository
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  
+          fetch-depth: 0
+
+      # Step 2: Set up .NET Core environment
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      # Step 3: Build the project
+      - name: Build project
+        run: dotnet build --configuration Release
+
+      # Step 4: Run tests and collect coverage
+      - name: Run tests and collect coverage
+        run: dotnet test --collect:"XPlat Code Coverage"
+
+      # Step 5: SonarCloud Scan with Coverage
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         with:
@@ -19,5 +36,4 @@ jobs:
             -Dsonar.projectKey=x00218712_testr
             -Dsonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
         env:
-        
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
