@@ -10,8 +10,7 @@ jobs:
         
         with:
             fetch-depth: 0
-      - name: Build project
-        run: dotnet build BPCalculator.sln --collect "Code Coverage"'
+     
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
