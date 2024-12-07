@@ -29,7 +29,6 @@ jobs:
           args: >
             -Dsonar.organization=x00218712
             -Dsonar.projectKey=x00218712_testr
-            -Dsonar.cs.opencover.reportsPaths="TestResults/coverage.cobertura.xml"
-            -Dsonar.exclusions="**/SeleniumTests/**"
+           
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
