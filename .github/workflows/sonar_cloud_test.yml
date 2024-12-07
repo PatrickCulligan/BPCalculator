@@ -1,0 +1,45 @@
+name: SonarCloud Analysis
+
+on:
+ workflow_dispatch:
+  
+
+jobs:
+  sonarcloud:
+    name: SonarCloud Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up .NET Core environment
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.x' # Adjust this to your required .NET version
+
+      # Step 3: Install SonarScanner for .NET globally
+      - name: Install SonarScanner for .NET
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      # Step 4: Add dotnet tools to PATH (since we installed SonarScanner globally)
+      - name: Add .NET Tools to PATH
+        run: echo "::add-path::$(dotnet tool list -g | grep sonarscanner | awk '{print $4}')"
+
+      # Step 5: SonarCloud - Begin Analysis
+      - name: SonarCloud - Begin Analysis
+        run: dotnet sonarscanner begin /o:"x00218712" /k:"x00218712_testr" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
+      # Step 6: Build the .NET project
+      - name: Build project
+        run: dotnet build BPCalculatorUnitTests.sln
+
+      # Step 7: Run tests (optional for test coverage)
+      - name: Run Tests
+        run: dotnet test BPCalculatorUnitTests.sln
+
+      # Step 8: SonarCloud - End Analysis
+      - name: SonarCloud - End Analysis
+        run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
