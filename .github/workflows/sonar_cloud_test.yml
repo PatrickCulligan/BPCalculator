@@ -17,6 +17,7 @@ jobs:
           args: >
             -Dsonar.organization=x00218712
             -Dsonar.projectKey=x00218712_testr
+            -Dsonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
         env:
         
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
