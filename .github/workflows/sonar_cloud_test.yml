@@ -17,7 +17,7 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Build Project
-        run: dotnet build BPCalculator.sln
+        run: dotnet build BPCalculatorUnitTests.sln
 
       - name: Run Tests with Code Coverage
         run: dotnet test --collect "Code Coverage"
