@@ -1,5 +1,4 @@
-# Sonar cloud scan
-
+# .github/workflows/sonarcloud.yml
 name: SonarCloud
 on:
   workflow_dispatch:                             
@@ -8,9 +7,31 @@ jobs:
   scan_code:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0  
+
+      # Step 2: Setup .NET
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.x' # Change this to match your .NET version
+
+      # Step 3: Restore dependencies
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # Step 4: Build the project
+      - name: Build the solution
+        run: dotnet build --no-restore --configuration Release
+
+      # Step 5: Run tests and generate coverage report
+      - name: Run tests with coverage
+        run: dotnet test --no-build --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./coverage/
+
+      # Step 6: Upload coverage to SonarCloud
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         with:
@@ -18,9 +39,6 @@ jobs:
           args: >
             -Dsonar.organization=x00218712
             -Dsonar.projectKey=x00218712_testr
+            -Dsonar.coverageReportPaths=coverage/coverage.cobertura.xml
         env:
-         
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
- 
-
-# secrets.SONAR_TOKEN secret in Github repo (generated when new project analysed on sonar cloud)
