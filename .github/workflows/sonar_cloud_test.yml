@@ -1,7 +1,7 @@
 name: SonarCloud Analysis
 
 on:
- workflow_dispatch:
+  workflow_dispatch:
   
 jobs:
   sonarcloud:
@@ -9,30 +9,58 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Step 2: Set up .NET Core
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
 
-      - name: Install SonarScanner for .NET globally
+      # Step 3: Install SonarScanner for .NET globally
+      - name: Install SonarScanner for .NET
         run: dotnet tool install --global dotnet-sonarscanner
 
+      # Step 4: Add .NET Tools to PATH
       - name: Add .NET Tools to PATH
-        run: |
-          echo "$(dotnet tool list -g | grep sonarscanner | awk '{print $4}')" >> $GITHUB_PATH
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
+      # Step 5: SonarCloud - Begin Analysis
       - name: SonarCloud - Begin Analysis
-        run: dotnet sonarscanner begin /o:"x00218712" /k:"x00218712_testr" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        run: |
+          dotnet sonarscanner begin \
+            /o:"x00218712" \
+            /k:"x00218712_testr" \
+            /d:sonar.host.url="https://sonarcloud.io" \
+            /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
+            /d:sonar.cs.opencover.reportsPaths="TestResults/Coverage/coverage.opencover.xml"
 
+      # Step 6: Restore dependencies
+      - name: Restore dependencies
+        run: dotnet restore BPCalculator.sln
+
+      # Step 7: Build project
       - name: Build project
-        run: dotnet build BPCalculator.sln
+        run: dotnet build BPCalculator.sln --configuration Release
 
-        
-      - name: Run unit tests
-        run: dotnet test BPCaluatorUnitTests/BPCaluatorUnitTests.csproj --collect "Code coverage"
+      # Step 8: Run unit tests and collect coverage
+      - name: Run tests and collect coverage
+        run: dotnet test BPCalculator.sln \
+          --configuration Release \
+          --collect:"XPlat Code Coverage" \
+          --results-directory TestResults
 
+      # Step 9: Convert coverage to OpenCover format
+      - name: Convert coverage report to OpenCover format
+        run: |
+          dotnet tool install --global dotnet-reportgenerator-globaltool
+          reportgenerator \
+            "-reports:TestResults/**/coverage.cobertura.xml" \
+            "-targetdir:TestResults/Coverage" \
+            "-reporttypes:opencover"
+
+      # Step 10: SonarCloud - End Analysis
       - name: SonarCloud - End Analysis
         run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
