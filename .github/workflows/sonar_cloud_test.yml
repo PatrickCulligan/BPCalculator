@@ -16,14 +16,11 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      - name: Install Coverlet
-        run: dotnet add BPCaluatorUnitTests/BPCaluatorUnitTests.csproj package coverlet.collector
-
       - name: Build Project
         run: dotnet build BPCalculator.sln
 
       - name: Run Tests with Code Coverage
-        run: dotnet test BPCaluatorUnitTests/BPCaluatorUnitTests.csproj --collect:"XPlat Code Coverage" --results-directory:TestResults
+        run: dotnet test --collect "Code Coverage"
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
