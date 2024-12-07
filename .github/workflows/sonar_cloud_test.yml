@@ -2,7 +2,7 @@ name: SonarCloud Analysis
 
 on:
   workflow_dispatch:
-  
+
 jobs:
   sonarcloud:
     name: SonarCloud Analysis
@@ -19,15 +19,15 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      # Step 3: Install SonarScanner for .NET globally
-      - name: Install SonarScanner for .NET
+      # Step 3: Install SonarScanner globally
+      - name: Install SonarScanner
         run: dotnet tool install --global dotnet-sonarscanner
 
       # Step 4: Add .NET Tools to PATH
       - name: Add .NET Tools to PATH
         run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
-      # Step 5: SonarCloud - Begin Analysis
+      # Step 5: Begin SonarCloud Analysis
       - name: SonarCloud - Begin Analysis
         run: |
           dotnet sonarscanner begin \
@@ -35,32 +35,18 @@ jobs:
             /k:"x00218712_testr" \
             /d:sonar.host.url="https://sonarcloud.io" \
             /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
-            /d:sonar.cs.opencover.reportsPaths="TestResults/Coverage/coverage.opencover.xml"
+            /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
 
-      # Step 6: Restore dependencies
-      - name: Restore dependencies
-        run: dotnet restore BPCalculator.sln
-
-      # Step 7: Build project
+      # Step 6: Build the project
       - name: Build project
         run: dotnet build BPCalculator.sln --configuration Release
 
-      # Step 8: Run unit tests and collect coverage
+      # Step 7: Run tests and collect code coverage
       - name: Run tests and collect coverage
-        run: dotnet test BPCalculator.sln \
+        run: dotnet test BPCaluatorUnitTests/BPCaluatorUnitTests.csproj \
           --configuration Release \
-          --collect:"XPlat Code Coverage" \
-          --results-directory TestResults
+          --collect:"XPlat Code Coverage"
 
-      # Step 9: Convert coverage to OpenCover format
-      - name: Convert coverage report to OpenCover format
-        run: |
-          dotnet tool install --global dotnet-reportgenerator-globaltool
-          reportgenerator \
-            "-reports:TestResults/**/coverage.cobertura.xml" \
-            "-targetdir:TestResults/Coverage" \
-            "-reporttypes:opencover"
-
-      # Step 10: SonarCloud - End Analysis
+      # Step 8: End SonarCloud Analysis
       - name: SonarCloud - End Analysis
         run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
