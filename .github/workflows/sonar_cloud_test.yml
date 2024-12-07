@@ -3,7 +3,6 @@ name: SonarCloud Analysis
 on:
  workflow_dispatch:
   
-
 jobs:
   sonarcloud:
     name: SonarCloud Analysis
