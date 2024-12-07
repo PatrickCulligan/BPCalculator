@@ -1,57 +1,26 @@
-name: SonarCloud Analysis
+# Sonar cloud scan
 
+name: SonarCloud
 on:
-  workflow_dispatch:
+  workflow_dispatch:                             
 
 jobs:
-  sonarcloud:
-    name: SonarCloud Analysis
+  scan_code:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Check out repository
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # Step 2: Set up .NET Core
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v4
         with:
-          dotnet-version: '8.x'
-
-      # Step 3: Install SonarScanner globally
-      - name: Install SonarScanner for .NET globally
-        run: dotnet tool install --global dotnet-sonarscanner
-
-      # Step 4: Add .NET Tools to PATH
-      - name: Add .NET Tools to PATH
-        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
-
-      # Step 5: Begin SonarCloud Analysis with Exclusions
-      - name: SonarCloud - Begin Analysis
-        run: dotnet sonarscanner begin \
-          /o:"x00218712" \
-          /k:"x00218712_testr"" \
-          /d:sonar.host.url="https://sonarcloud.io" \
-          /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
-          /d:sonar.cs.opencover.reportsPaths="TestResults/coverage.cobertura.xml" \
-          /d:sonar.exclusions="**/SeleniumTests/**,**/bin/**,**/obj/**"
-
-      # Step 6: Build Project
-      - name: Build project
-        run: dotnet build BPCalculator.sln --no-restore
-
-      # Step 7: Run Unit Tests and Collect Code Coverage
-      - name: Run unit tests with code coverage
-        run: dotnet test BPCaluatorUnitTests/BPCaluatorUnitTests.csproj --collect:"XPlat Code Coverage" --results-directory TestResults
-
-      # Step 8: End SonarCloud Analysis
-      - name: SonarCloud - End Analysis
-        run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-
-      # Step 9: Upload Code Coverage Report
-      - name: Upload coverage report as an artifact
-        uses: actions/upload-artifact@v4
+          fetch-depth: 0  
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
         with:
-          name: Code-Coverage-Report
-          path: TestResults/coverage.cobertura.xml
+          projectBaseDir: .
+          args: >
+            -Dsonar.organization=x00218712
+            -Dsonar.projectKey=x00218712_testr
+        env:
+         
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+ 
+
+# secrets.SONAR_TOKEN secret in Github repo (generated when new project analysed on sonar cloud)
