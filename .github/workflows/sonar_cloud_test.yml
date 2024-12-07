@@ -27,12 +27,13 @@ jobs:
       - name: SonarCloud - Begin Analysis
         run: dotnet sonarscanner begin /o:"x00218712" /k:"x00218712_testr" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
+          
+      - name: Run unit tests
+        run: dotnet test BPCaluatorUnitTests/BPCaluatorUnitTests.csproj --collect "Code coverage"
+        
       - name: Build project
         run: dotnet build BPCalculator.sln
 
-        
-      - name: Run unit tests
-        run: dotnet test BPCaluatorUnitTests/BPCaluatorUnitTests.csproj --collect "Code coverage"
 
       - name: SonarCloud - End Analysis
         run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
