@@ -1,11 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <ApplicationInsightsResourceId>/subscriptions/41798066-9f3e-4d55-ab70-1c96cbca3022/resourceGroups/bmi202420240916192851ResourceGroup/providers/microsoft.insights/components/BPCalulator-Green-Slot</ApplicationInsightsResourceId>
+    <UserSecretsId>f2d956a7-4556-408e-a38d-1fc239c0c6ba</UserSecretsId>
   </PropertyGroup>
 
 
   <ItemGroup>
+    <PackageReference Include="Azure.Identity" Version="1.13.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
   </ItemGroup>
   <ItemGroup>
