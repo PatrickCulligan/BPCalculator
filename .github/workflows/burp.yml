@@ -1,38 +1,31 @@
-name: Burp Suite BMI Scan
+# OWASP ZAP baseline scan in docker container
+# pull docker image
+# run baseline scan on URI and store test result file via volume mounted on container
+
+name: ZAP BMI
 
 env:
-  URI: https://bpcalulator-green-slot-dscydwgqh3eyfxf4.ukwest-01.azurewebsites.net/
-
+  URI: https://bpcalulator-green-slot-dscydwgqh3eyfxf4.ukwest-01.azurewebsites.net/           
+  
 on:
   workflow_dispatch:                  # manually triggered
 
 jobs:
 
-  burp_scan:
+  zap_baseline_scan:
 
     runs-on: ubuntu-latest
 
     steps:
 
-    # Step 1: Pull Burp Suite Docker Image
-    - name: Pull Docker image for Burp Suite
-      run: docker pull portswigger/burp-enterprise-edition:latest
+    - name: Pull Docker image for ZAP
+      run: docker pull zaproxy/zap-weekly
 
-    # Step 2: Run Burp Scan
-    - name: Run Burp Suite Scan
-      run: |
-        mkdir -p burp_report
-        docker run --rm \
-          -v ${{ github.workspace }}/burp_report:/burp/reports:rw \
-          portswigger/burp-enterprise-edition:latest \
-          --headless \
-          --scan-url ${{ env.URI }} \
-          --report-file /burp/reports/burp_report.html \
-          --scan-name "BMI Scan"
-
-    # Step 3: Upload Burp Suite Scan Report
-    - name: Upload Burp Report
-      uses: actions/upload-artifact@v4
+    - name: Run baseline scan
+      run: docker run -v /report:/zap/wrk/:rw --user root -t zaproxy/zap-weekly zap-baseline.py -t ${{env.URI}} -I -r zapreport.html
+  
+    - uses: actions/upload-artifact@v4
+      name: upload ZAP report
       with:
-        name: BurpReport
-        path: burp_report/burp_report.html
+        name: ZAPreport
+        path: /report/zapreport.html
