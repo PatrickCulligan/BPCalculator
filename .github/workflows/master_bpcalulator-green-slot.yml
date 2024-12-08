@@ -1,14 +1,13 @@
-name: Build, test, and deploy ASP.Net Core app to Azure Web App - BPCalulator-Slot
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build, test, and deploy ASP.Net Core app to Azure Web App - BPCalulator-Slots
 
 on:
-
-    workflow_dispatch:
-  
-  # Trigger on commits to the specified branches
-  #push:
-    #branches:
-    #  - master   # Replace with your primary branch name
-    #  - develop # Add any additional branches to trigger on
+  workflow_dispatch:
+  push:
+    branches:
+      - master # Adjust branch name if necessary
 
 jobs:
   build:
@@ -45,23 +44,22 @@ jobs:
 
       # Step 6: Publish the application
       - name: dotnet publish
-        run: dotnet publish BPCalculator/BPCalculator.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish BPCalculator/BPCalculator.csproj -c Release -o myapp
 
       # Step 7: Upload the artifact for deployment
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: myapp
 
-  deploy:
+  deploy-green:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      name: 'Production-Green'
     permissions:
-      id-token: write # This is required for requesting the JWT
+      id-token: write
 
     steps:
       # Step 1: Download the build artifact
@@ -70,7 +68,7 @@ jobs:
         with:
           name: .net-app
 
-      # Step 2: Login to Azure
+      # Step 2: Login to Azure for Green Slot
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -78,11 +76,41 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_86153D20E06C43F6A5FFA25FE8027B4C }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_717043D279D448B68723C3360D21D4C9 }}
 
-      # Step 3: Deploy the application to Azure Web App
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
+      # Step 3: Deploy to Azure Web App Green Slot
+      - name: Deploy to Azure Web App - Green Slot
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'BPCalulator-Green-Slot'
           slot-name: 'Production'
-          package: .
+          package: myapp
+
+  deploy-blue:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'Production-Blue'
+    permissions:
+      id-token: write
+
+    steps:
+      # Step 1: Download the build artifact
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: .net-app
+
+      # Step 2: Login to Azure for Blue Slot
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_BDBC988C773F442D925CFA2ED7CF7E87 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_33805F9EBD9944FCB98A54990CECF45A }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_07D51D2001954CC1AE654970E21F8794 }}
+
+      # Step 3: Deploy to Azure Web App Blue Slot
+      - name: Deploy to Azure Web App - Blue Slot
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'BPCalulator-Blue-Slot'
+          slot-name: 'Production'
+          package: myapp
