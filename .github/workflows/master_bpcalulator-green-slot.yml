@@ -1,12 +1,6 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build, test, and deploy ASP.Net Core app to Azure Web App - BPCalulator-Green-Slot
 
 on:
-#  push:
-#    branches:
-#      - master
   workflow_dispatch:
 
 jobs:
@@ -14,24 +8,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the code
       - uses: actions/checkout@v4
 
+      # Step 2: Set up .NET Core
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
 
+      # Step 3: Build the application
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build BPCalculator/BPCalculator.csproj --configuration Release
 
+      # Step 4: Run unit tests with code coverage
       - name: Run unit tests
         run: dotnet test BPCaluatorUnitTests/BPCaluatorUnitTests.csproj --collect "Code coverage"
 
+      # Step 5: Run SonarCloud scan
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: .
+          args: >
+            -Dsonar.organization=x00218712
+            -Dsonar.projectKey=x00218712_testr
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+      # Step 6: Publish the application
       - name: dotnet publish
         run: dotnet publish BPCalculator/BPCalculator.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
-
+      # Step 7: Upload the artifact for deployment
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
@@ -45,16 +54,16 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write #This is required for requesting the JWT
-
-
+      id-token: write # This is required for requesting the JWT
 
     steps:
+      # Step 1: Download the build artifact
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-      
+
+      # Step 2: Login to Azure
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -62,6 +71,7 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_86153D20E06C43F6A5FFA25FE8027B4C }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_717043D279D448B68723C3360D21D4C9 }}
 
+      # Step 3: Deploy the application to Azure Web App
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
