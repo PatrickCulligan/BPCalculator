@@ -1,0 +1,38 @@
+name: Burp Suite BMI Scan
+
+env:
+  URI: https://bpcalulator-green-slot-dscydwgqh3eyfxf4.ukwest-01.azurewebsites.net/
+
+on:
+  workflow_dispatch:                  # manually triggered
+
+jobs:
+
+  burp_scan:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    # Step 1: Pull Burp Suite Docker Image
+    - name: Pull Docker image for Burp Suite
+      run: docker pull portswigger/burp-enterprise-edition:latest
+
+    # Step 2: Run Burp Scan
+    - name: Run Burp Suite Scan
+      run: |
+        mkdir -p burp_report
+        docker run --rm \
+          -v ${{ github.workspace }}/burp_report:/burp/reports:rw \
+          portswigger/burp-enterprise-edition:latest \
+          --headless \
+          --scan-url ${{ env.URI }} \
+          --report-file /burp/reports/burp_report.html \
+          --scan-name "BMI Scan"
+
+    # Step 3: Upload Burp Suite Scan Report
+    - name: Upload Burp Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: BurpReport
+        path: burp_report/burp_report.html
