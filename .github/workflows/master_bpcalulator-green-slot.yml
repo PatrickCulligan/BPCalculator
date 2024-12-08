@@ -1,7 +1,11 @@
-name: Build, test, and deploy ASP.Net Core app to Azure Web App - BPCalulator-Green-Slot
+name: Build, test, and deploy ASP.Net Core app to Azure Web App - BPCalulator-Slot
 
 on:
-  workflow_dispatch:
+  # Trigger on commits to the specified branches
+  push:
+    branches:
+      - main   # Replace with your primary branch name
+      - develop # Add any additional branches to trigger on
 
 jobs:
   build:
