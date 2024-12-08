@@ -24,6 +24,7 @@ jobs:
         with:
           dotnet-version: '8.x'
 
+
       # Step 3: Build the application
       - name: Build with dotnet
         run: dotnet build BPCalculator/BPCalculator.csproj --configuration Release
@@ -42,6 +43,31 @@ jobs:
             -Dsonar.projectKey=x00218712_testr
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    #Step 
+
+      - name: Depcheck
+        uses: dependency-check/Dependency-Check_Action@main
+        id: Depcheck
+        with:
+          project: 'BPCalculation'
+          path: '.'
+          format: 'HTML'    
+          args: >
+            --failOnCVSS 8            
+          # fail if CVSS score (CVE scoring system) is High >=8
+
+      - name: Upload Test results
+        uses: actions/upload-artifact@v4
+        with:
+           name: Depcheck report
+           path: ${{github.workspace}}/reports
+          
+      - name: Upload Test results
+        uses: actions/upload-artifact@v4
+        with:
+           name: Depcheck report
+           path: ${{github.workspace}}/reports
+
 
       # Step 6: Publish the application
       - name: dotnet publish
@@ -87,22 +113,22 @@ jobs:
           slot-name: 'Production'
           package: .
 
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: .net-app
+  #    - name: Download artifact from build job
+  #      uses: actions/download-artifact@v4
+  #      with:
+  #        name: .net-app
       
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_BDBC988C773F442D925CFA2ED7CF7E87 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_33805F9EBD9944FCB98A54990CECF45A }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_07D51D2001954CC1AE654970E21F8794 }}
+  #    - name: Login to Azure
+  #      uses: azure/login@v2
+  #      with:
+  #        client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_BDBC988C773F442D925CFA2ED7CF7E87 }}
+  #        tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_33805F9EBD9944FCB98A54990CECF45A }}
+  #        subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_07D51D2001954CC1AE654970E21F8794 }}
 
-      - name: Deploy to Azure Blue Web App
-        id: deploy-to-webapp-blu
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'BPCalulator-Blue-Slot'
-          slot-name: 'Production'
-          package: .
+  #    - name: Deploy to Azure Blue Web App
+  #      id: deploy-to-webapp-blu
+  #      uses: azure/webapps-deploy@v3
+  #      with:
+  #        app-name: 'BPCalulator-Blue-Slot'
+  #       slot-name: 'Production'
+  #        package: .
