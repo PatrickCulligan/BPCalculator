@@ -99,8 +99,8 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_33805F9EBD9944FCB98A54990CECF45A }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_07D51D2001954CC1AE654970E21F8794 }}
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
+      - name: Deploy to Azure Blue Web App
+        id: deploy-to-webapp-blu
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'BPCalulator-Blue-Slot'
