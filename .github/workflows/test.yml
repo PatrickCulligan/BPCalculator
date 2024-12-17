@@ -1,7 +1,7 @@
 name: Generate Continuous Deployment Graph
 
 on:
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch:  # Manual trigge
 
 jobs:
   generate-graph:
