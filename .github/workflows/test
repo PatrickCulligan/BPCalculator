@@ -1,0 +1,45 @@
+name: Generate Continuous Deployment Graph
+
+on:
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  generate-graph:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: pip install matplotlib numpy
+
+      - name: Generate Graph
+        run: python -c "
+          import matplotlib.pyplot as plt;
+          import numpy as np;
+
+          phases = ['Development', 'Build & Test', 'Integration & Analysis', 'Deployment', 'Monitoring & Feedback'];
+          x = np.linspace(0, 10, 100);
+          y = [phase for phase in phases for _ in range(20)];
+          time = np.linspace(0, len(y), len(y));
+          plt.figure(figsize=(12, 6));
+          plt.plot(time, y, marker='o', linestyle='-', color='b', markersize=6, linewidth=1.5);
+          plt.title('Continuous Deployment Model in GitHub Actions', fontsize=16);
+          plt.xlabel('Time (Continuous Triggers)', fontsize=12);
+          plt.ylabel('Deployment Phases', fontsize=12);
+          plt.grid(True);
+          plt.fill_between(time, -1, y, color='lightblue', alpha=0.3);
+          plt.savefig('continuous_deployment_graph.png');
+        "
+
+      - name: Upload Graph
+        uses: actions/upload-artifact@v4
+        with:
+          name: continuous-deployment-graph
+          path: continuous_deployment_graph.png
