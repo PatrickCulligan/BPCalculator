@@ -41,7 +41,7 @@ jobs:
           plt.grid(True);
           plt.fill_between(time, -1, y, color='lightblue', alpha=0.3);
           plt.savefig('continuous_deployment_graph.png');
-        "
+        
 
       - name: Upload Graph
         uses: actions/upload-artifact@v4
