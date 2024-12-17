@@ -1,9 +1,9 @@
 name: Build, test, and deploy ASP.Net Core app to Azure Web App - BPCalulator-Slot
 
 on:
-  push:
-    branches:
-      - master
+ # push:
+#    branches:
+ #     - master
   workflow_dispatch:
 
 jobs:
