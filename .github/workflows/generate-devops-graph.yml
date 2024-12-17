@@ -1,0 +1,56 @@
+name: Generate DevOps Graph
+
+on:
+  workflow_dispatch: # Trigger manually
+
+jobs:
+  generate-graph:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout Repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'  # Use the latest Python version
+
+      # Step 3: Install Dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install matplotlib
+
+      # Step 4: Generate Graph
+      - name: Generate DevOps Impact Graph
+        run: |
+          import matplotlib.pyplot as plt
+
+          # Data for DevOps improvements
+          categories = ['Reduced Deployment Time', 'Faster Delivery', 'Fewer Post-Release Issues']
+          values = [70, 300, 50]  # 70%, 3x (300%), 50%
+
+          # Plot the bar graph
+          plt.figure(figsize=(10, 6))
+          plt.bar(categories, values, color=['#4CAF50', '#2196F3', '#FFC107'])
+          plt.title("Impact of Existing DevOps Implementations")
+          plt.ylabel("Improvement (%)")
+          plt.ylim(0, 350)
+
+          # Add data labels
+          for i, v in enumerate(values):
+              plt.text(i, v + 10, f"{v}%", ha='center', fontsize=12)
+
+          plt.tight_layout()
+          plt.savefig('devops_impact_graph.png')  # Save the graph as a PNG file
+        shell: python
+
+      # Step 5: Upload Graph as Artifact
+      - name: Upload Graph Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: devops-impact-graph
+          path: devops_impact_graph.png
